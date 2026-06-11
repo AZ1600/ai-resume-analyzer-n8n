@@ -1,0 +1,240 @@
+{
+  "name": "cloud-resume-analyzer-bedrock",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d56a87b9-a746-4275-b433-e2319a3ca49e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "08e938cc-f660-4095-bf46-e4d983ace63f",
+              "name": "resume_text",
+              "value": "Experienced Cloud Engineer with hands-on experience in AWS, Terraform, Docker, Kubernetes, GitHub Actions, Prometheus, Grafana, CI/CD pipelines, Infrastructure as Code, Amazon EKS, Amazon ECR, monitoring, observability, and cloud-native application deployment.",
+              "type": "string"
+            },
+            {
+              "id": "9e2d5b0f-273b-4e62-a7ca-cbfa16c58e67",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1e7405d7-21ee-40af-b45c-c3f7f5c054d8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const resume = $input.first().json.resume_text;\n\nconst skills = [];\n\nif (resume.includes(\"AWS\")) skills.push(\"AWS\");\nif (resume.includes(\"Terraform\")) skills.push(\"Terraform\");\nif (resume.includes(\"Docker\")) skills.push(\"Docker\");\nif (resume.includes(\"Kubernetes\")) skills.push(\"Kubernetes\");\nif (resume.includes(\"GitHub Actions\")) skills.push(\"GitHub Actions\");\nif (resume.includes(\"Prometheus\")) skills.push(\"Prometheus\");\nif (resume.includes(\"Grafana\")) skills.push(\"Grafana\");\n\nreturn [\n  {\n    json: {\n      detected_skills: skills,\n      total_skills: skills.length\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "df24db2c-d780-4f29-9955-e7fda0c0483a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const skills = $input.first().json.detected_skills;\n\nlet recommendations = [];\n\nif (!skills.includes(\"Python\")) {\n  recommendations.push(\"Learn Python automation and scripting.\");\n}\n\nif (!skills.includes(\"Jenkins\")) {\n  recommendations.push(\"Gain experience with Jenkins CI/CD.\");\n}\n\nif (!skills.includes(\"AWS Solutions Architecture\")) {\n  recommendations.push(\"Develop AWS Solutions Architect skills.\");\n}\n\nif (!skills.includes(\"Ansible\")) {\n  recommendations.push(\"Learn configuration management with Ansible.\");\n}\n\nreturn [\n  {\n    json: {\n      detected_skills: skills,\n      recommendations: recommendations\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "d11733fd-1e09-4237-8de9-89b2e9c62938",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "278394e3-6859-46e3-b4fe-aeeee2328044",
+              "name": "target_role",
+              "value": "AWS Solutions Architect",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        0
+      ],
+      "id": "66f6cd88-61c2-46d9-a7c2-699156ebed80",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const skills = $input.first().json.detected_skills || [];\n\nconst architectSkills = [\n  \"AWS\",\n  \"Terraform\",\n  \"Docker\",\n  \"Kubernetes\",\n  \"Python\",\n  \"Linux\",\n  \"Networking\",\n  \"CI/CD\",\n  \"Security\",\n  \"Monitoring\"\n];\n\nconst missingSkills = architectSkills.filter(\n  skill => !skills.includes(skill)\n);\n\nreturn [\n  {\n    json: {\n      detected_skills: skills,\n      missing_skills: missingSkills,\n      readiness_score: Math.round(\n        (skills.length / architectSkills.length) * 100\n      )\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "7a0a8542-b42b-4c33-8dba-f8d43cb3c59c",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior AWS Solutions Architect and Platform Engineering mentor.\n\nAnalyze this candidate.\n\nDetected Skills:\n{{ $json.detected_skills }}\n\nMissing Skills:\n{{ $json.missing_skills }}\n\nCurrent Readiness Score:\n{{ $json.readiness_score }}\n\nProvide:\n\n1. Top strengths\n2. Missing skills explanation\n3. Readiness score review\n4. Recommended AWS certifications\n5. Recommended projects\n6. Career improvement advice",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1456,
+        48
+      ],
+      "id": "9339fbb2-c2a6-4ed8-94ec-34608460affa",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "amazon.nova-pro-v1:0",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAwsBedrock",
+      "typeVersion": 1.1,
+      "position": [
+        1664,
+        48
+      ],
+      "id": "279225a2-71a3-43be-9130-84ec6f99ead0",
+      "name": "AWS Bedrock Chat Model",
+      "credentials": {
+        "aws": {
+          "id": "fv1VylqRbHzceoBN",
+          "name": "AWS (IAM) account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS Bedrock Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1
+  },
+  "versionId": "ee127d9b-a289-4358-9a8e-66282ac80eb7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "09066ff40552967a74347b19ed8ead7e6968a3c2c280cf9e267dfdf6c8112156"
+  },
+  "nodeGroups": [],
+  "id": "el5UfS75pwimQYJu",
+  "tags": []
+}
