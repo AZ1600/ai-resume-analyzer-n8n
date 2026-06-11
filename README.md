@@ -1,18 +1,25 @@
-# AI Resume Analyzer n8n
+# AI Resume Analyzer with AWS Bedrock
 
 ## Overview
 
-This project demonstrates workflow automation using n8n.
+This project demonstrates an AI-powered resume analysis platform built using n8n, AWS Bedrock, and Amazon Nova Pro.
 
-The workflow analyzes resume content, extracts technical skills, and generates recommendations for professional development.
+The workflow analyzes resume content, extracts technical skills, identifies skill gaps, calculates readiness scores, and generates AI-driven career recommendations for cloud and platform engineering roles.
 
-## Workflow
+## Features
 
-Manual Trigger
+* Resume skill extraction
+* Skill gap analysis
+* Readiness scoring
+* AWS Bedrock integration
+* Amazon Nova Pro AI analysis
+* Certification recommendations
+* Career improvement guidance
+* Automated workflow execution
 
-↓
+## Architecture
 
-Resume Text Input
+Resume Text
 
 ↓
 
@@ -20,55 +27,59 @@ Skill Extraction Engine
 
 ↓
 
-Recommendation Engine
+Gap Analysis Engine
 
 ↓
 
-Output Results
+Readiness Score Calculation
+
+↓
+
+AWS Bedrock (Amazon Nova Pro)
+
+↓
+
+AI Career Assessment
+
+↓
+
+Recommendations Report
 
 ## Technologies
 
+* AWS Bedrock
+* Amazon Nova Pro
 * n8n
-* Docker
 * JavaScript
-* Workflow Automation
-
-## Features
-
-* Resume skill extraction
-* Recommendation generation
-* Automated workflow execution
-* Data transformation using JavaScript
+* Docker
+* GitHub
 
 ## Skills Demonstrated
 
+* Generative AI
+* Prompt Engineering
 * Workflow Automation
 * Low-Code Development
 * JavaScript Automation
 * Data Processing
-* DevOps Tooling
+* Cloud Engineering
 * Platform Engineering
 
-# Cloud Resume Analyzer v3
+## Example Output
 
-## Features
+The workflow provides:
 
-- Resume skill extraction
-- Skill gap analysis
-- Readiness scoring
-- AWS Bedrock integration
-- Amazon Nova Pro AI analysis
-- Certification recommendations
-- Career improvement guidance
+* Technical skill assessment
+* Missing skill identification
+* Readiness score out of 100
+* Certification recommendations
+* Project recommendations
+* Personalized career development advice
 
-## Architecture
+## Future Enhancements
 
-Resume
-↓
-JavaScript Skill Detection
-↓
-Readiness Scoring
-↓
-AWS Bedrock (Nova Pro)
-↓
-AI Career Assessment
+* PDF resume upload
+* Multi-role career assessment
+* Resume scoring dashboard
+* Automated report generation
+* Integration with AWS Lambda and S3
