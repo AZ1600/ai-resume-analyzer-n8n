@@ -48,3 +48,27 @@ Output Results
 * Data Processing
 * DevOps Tooling
 * Platform Engineering
+
+# Cloud Resume Analyzer v3
+
+## Features
+
+- Resume skill extraction
+- Skill gap analysis
+- Readiness scoring
+- AWS Bedrock integration
+- Amazon Nova Pro AI analysis
+- Certification recommendations
+- Career improvement guidance
+
+## Architecture
+
+Resume
+↓
+JavaScript Skill Detection
+↓
+Readiness Scoring
+↓
+AWS Bedrock (Nova Pro)
+↓
+AI Career Assessment
