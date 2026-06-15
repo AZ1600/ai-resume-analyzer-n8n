@@ -1,7 +1,3 @@
-# Test
-
-![Workflow Overview](docs/workflow-overview.png)
-
 # AI Resume Analyzer with AWS Bedrock & n8n
 
 ## Overview
