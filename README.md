@@ -54,6 +54,38 @@ Recommendations Report
 * Docker
 * GitHub
 
+## Screenshots
+
+### Workflow Architecture
+
+The AI Resume Analyzer workflow processes candidate skills, performs custom scoring logic, and uses AWS Bedrock with Amazon Nova Pro to generate career recommendations.
+
+![Workflow Overview](docs/workflow-overview.png)
+
+---
+
+### AWS Bedrock AI Analysis
+
+AI-powered skills analysis generated using AWS Bedrock and Amazon Nova Pro.
+
+![AI Analysis](docs/ai-analysis.png)
+
+---
+
+### Custom Scoring Engine
+
+Custom JavaScript logic calculates readiness scores and identifies skill gaps against target cloud and platform engineering roles.
+
+![Scoring Engine](docs/scoring-engine.png)
+
+---
+
+### Workflow Execution
+
+Successful workflow execution within n8n.
+
+![Workflow Execution](docs/workflow-execution.png)
+
 ## Skills Demonstrated
 
 * Generative AI
