@@ -25,3 +25,16 @@ test("frontend loads the shared scoring contract before its controller", () => {
   assert.ok(scoringIndex >= 0);
   assert.ok(appIndex > scoringIndex);
 });
+
+test("frontend container copies assets instead of nesting read-only mounts", () => {
+  const dockerfile = fs.readFileSync(path.join(frontend, "Dockerfile"), "utf8");
+  const compose = fs.readFileSync(
+    path.join(__dirname, "..", "docker-compose.yml"),
+    "utf8",
+  );
+
+  assert.match(dockerfile, /COPY frontend\/ \/usr\/share\/nginx\/html\//u);
+  assert.match(dockerfile, /COPY lib\/resume-scoring\.js/u);
+  assert.doesNotMatch(compose, /\/usr\/share\/nginx\/html\/resume-scoring\.js:ro/u);
+  assert.match(compose, /FRONTEND_PORT:-3001/u);
+});
