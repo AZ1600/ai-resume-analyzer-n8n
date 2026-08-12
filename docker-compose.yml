@@ -1,4 +1,13 @@
 services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+
+    ports:
+      - "${FRONTEND_PORT:-3001}:80"
+
   n8n:
     image: n8nio/n8n:2.6.4
     restart: unless-stopped
