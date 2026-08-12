@@ -43,7 +43,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const resume = $input.first().json.resume_text;\n\nconst skills = [];\n\nif (resume.includes(\"AWS\")) skills.push(\"AWS\");\nif (resume.includes(\"Terraform\")) skills.push(\"Terraform\");\nif (resume.includes(\"Docker\")) skills.push(\"Docker\");\nif (resume.includes(\"Kubernetes\")) skills.push(\"Kubernetes\");\nif (resume.includes(\"GitHub Actions\")) skills.push(\"GitHub Actions\");\nif (resume.includes(\"Prometheus\")) skills.push(\"Prometheus\");\nif (resume.includes(\"Grafana\")) skills.push(\"Grafana\");\n\nreturn [\n  {\n    json: {\n      detected_skills: skills,\n      total_skills: skills.length\n    }\n  }\n];"
+        "jsCode": "const resume = String($input.first().json.resume_text || '').toLowerCase();\n\nconst aliases = {\n  AWS: ['aws', 'amazon web services', 'ec2', 'lambda'],\n  Terraform: ['terraform', 'infrastructure as code', 'iac'],\n  Docker: ['docker', 'containerisation', 'containerization'],\n  Kubernetes: ['kubernetes', 'k8s', 'eks'],\n  Python: ['python', 'boto3'],\n  Linux: ['linux', 'ubuntu', 'rhel', 'red hat'],\n  Networking: ['networking', 'vpc', 'dns', 'tcp/ip', 'subnet'],\n  'CI/CD': ['ci/cd', 'continuous integration', 'github actions', 'jenkins', 'gitlab ci'],\n  GitOps: ['gitops', 'argocd', 'argo cd', 'fluxcd', 'flux cd'],\n  Security: ['security', 'iam', 'devsecops', 'least privilege'],\n  Monitoring: ['monitoring', 'observability', 'prometheus', 'grafana', 'cloudwatch']\n};\n\nconst escaped = value => value.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\nconst includesAlias = alias => new RegExp(`(^|[^a-z0-9])${escaped(alias)}([^a-z0-9]|$)`).test(resume);\nconst skills = Object.entries(aliases)\n  .filter(([, values]) => values.some(includesAlias))\n  .map(([skill]) => skill);\n\nreturn [{ json: { ...$input.first().json, detected_skills: skills } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -93,7 +93,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const skills = $input.first().json.detected_skills || [];\n\nconst architectSkills = [\n  \"AWS\",\n  \"Terraform\",\n  \"Docker\",\n  \"Kubernetes\",\n  \"Python\",\n  \"Linux\",\n  \"Networking\",\n  \"CI/CD\",\n  \"Security\",\n  \"Monitoring\"\n];\n\nconst missingSkills = architectSkills.filter(\n  skill => !skills.includes(skill)\n);\n\nreturn [\n  {\n    json: {\n      detected_skills: skills,\n      missing_skills: missingSkills,\n      readiness_score: Math.round(\n        (skills.length / architectSkills.length) * 100\n      )\n    }\n  }\n];"
+        "jsCode": "const input = $input.first().json;\nconst skills = input.detected_skills || [];\nconst requiredSkills = [\n  'AWS', 'Terraform', 'Docker', 'Kubernetes', 'Python',\n  'Linux', 'Networking', 'CI/CD', 'Security', 'Monitoring'\n];\nconst matchedSkills = requiredSkills.filter(skill => skills.includes(skill));\nconst missingSkills = requiredSkills.filter(skill => !skills.includes(skill));\n\nreturn [{\n  json: {\n    ...input,\n    matched_skills: matchedSkills,\n    missing_skills: missingSkills,\n    readiness_score: Math.round((matchedSkills.length / requiredSkills.length) * 100),\n    scoring_version: '2.0'\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -132,12 +132,7 @@
       ],
       "id": "279225a2-71a3-43be-9130-84ec6f99ead0",
       "name": "AWS Bedrock Chat Model",
-      "credentials": {
-        "aws": {
-          "id": "fv1VylqRbHzceoBN",
-          "name": "AWS (IAM) account"
-        }
-      }
+      "credentials": {}
     }
   ],
   "pinData": {},
@@ -229,12 +224,9 @@
     "callerPolicy": "workflowsFromSameOwner",
     "executionTimeout": -1
   },
-  "versionId": "ee127d9b-a289-4358-9a8e-66282ac80eb7",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "09066ff40552967a74347b19ed8ead7e6968a3c2c280cf9e267dfdf6c8112156"
+    "templateCredsSetupCompleted": false
   },
   "nodeGroups": [],
-  "id": "el5UfS75pwimQYJu",
   "tags": []
 }

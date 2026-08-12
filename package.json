@@ -1,0 +1,7 @@
+{
+  "name": "ai-resume-analyzer-n8n",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}
