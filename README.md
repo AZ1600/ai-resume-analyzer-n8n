@@ -8,6 +8,27 @@ The solution analyzes candidate resumes against cloud and platform engineering r
 
 This project demonstrates practical implementation of AI workflow automation, prompt engineering, custom business logic, and AWS generative AI services within a low-code automation platform.
 
+The public workflow export is a portable template: it contains no AWS access keys, n8n instance fingerprint, or reusable credential binding. Importers must select their own AWS credential inside n8n.
+
+---
+
+## Quick Start
+
+Requirements:
+
+* Docker with Docker Compose
+* An AWS account with Amazon Bedrock model access
+* An IAM principal allowed to invoke the selected Bedrock model
+
+```bash
+cp .env.example .env
+docker compose up -d
+```
+
+Open `http://localhost:5678`, import `cloud-resume-analyzer-bedrock.json`, and attach your own AWS credential to the **AWS Bedrock Chat Model** node.
+
+The included configuration is for local development only. If n8n is exposed publicly, use HTTPS, secure cookies, a strong n8n encryption key, authentication, and a correctly configured `WEBHOOK_URL`.
+
 ---
 
 ## Architecture
@@ -123,6 +144,8 @@ Resume information is parsed and normalized into structured skill data.
 
 JavaScript logic compares detected skills against target role requirements and calculates readiness scores.
 
+Detection is case-insensitive and normalizes common aliases. Examples include `K8s` and `EKS` as Kubernetes, `GitHub Actions` and `Jenkins` as CI/CD, and `Prometheus`, `Grafana`, and `CloudWatch` as Monitoring. The readiness score is deterministic and based only on matched skills in the selected role profile.
+
 Example target skills include:
 
 * AWS
@@ -198,8 +221,24 @@ The workflow generates:
 │   └── workflow-overview.png
 ├── cloud-resume-analyzer-bedrock.json
 ├── docker-compose.yml
+├── .env.example
+├── lib/resume-scoring.js
+├── tests/resume-scoring.test.js
+├── package.json
 └── README.md
 ```
+
+---
+
+## Validation
+
+Run the dependency-free scoring tests with:
+
+```bash
+npm test
+```
+
+The tests cover capitalization, common platform-engineering aliases, complete role matching, and invalid role profiles.
 
 ---
 
