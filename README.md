@@ -27,7 +27,9 @@ docker compose up -d
 
 Open `http://localhost:5678`, import `cloud-resume-analyzer-bedrock.json`, and attach your own AWS credential to the **AWS Bedrock Chat Model** node.
 
-Open `http://localhost:3001` to use the résumé-analysis frontend. The browser runs the same deterministic scoring contract used by the tested module; it does not receive AWS credentials or store résumé text. Set `FRONTEND_PORT` in `.env` if that port is already occupied.
+Open `http://localhost:3001` to use the résumé-analysis frontend. Upload a PDF, DOCX, or TXT file, or paste résumé text. Extraction and deterministic scoring happen in the browser; the application does not send or store the résumé. PDF.js and Mammoth are loaded from pinned public CDNs, so the first PDF/DOCX use requires internet access. Set `FRONTEND_PORT` in `.env` if that port is already occupied.
+
+The results include an evidence ledger. Every detected skill links back to the exact résumé sentence that matched it and receives one transparent label: **mentioned**, **supported**, or **strong**. These labels describe the quality of the written evidence; they are not hiring decisions or claims that a candidate has been independently verified.
 
 The included configuration is for local development only. If n8n is exposed publicly, use HTTPS, secure cookies, a strong n8n encryption key, authentication, and a correctly configured `WEBHOOK_URL`.
 
@@ -74,6 +76,8 @@ Career Recommendations
 * AWS Bedrock Integration
 * Amazon Nova Pro Large Language Model
 * Automated Skills Detection
+* PDF, DOCX, TXT, and pasted-text input
+* Source evidence snippets and confidence labels
 * Skill Gap Analysis
 * Readiness Score Calculation
 * Career Development Recommendations

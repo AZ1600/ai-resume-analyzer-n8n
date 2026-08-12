@@ -174,7 +174,8 @@ label {
 }
 
 select,
-textarea {
+textarea,
+.upload-zone {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -183,6 +184,23 @@ textarea {
   padding: 13px 14px;
   outline: none;
 }
+
+.upload-zone {
+  display: grid;
+  gap: 5px;
+  margin-top: 8px;
+  border: 1px dashed #91aaa7;
+  background: var(--teal-soft);
+  color: var(--teal);
+  cursor: pointer;
+  text-align: center;
+}
+
+.upload-zone span { color: #52716d; font-size: 11px; font-weight: 650; }
+.upload-zone input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+.input-divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 10px; text-transform: uppercase; }
+.input-divider::before, .input-divider::after { flex: 1; height: 1px; background: var(--line); content: ""; }
 
 select:focus,
 textarea:focus {
@@ -223,6 +241,16 @@ textarea {
 }
 
 .primary-button:hover { background: #203c60; }
+
+.clear-button {
+  justify-self: start;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 2px 0;
+  font-size: 11px;
+  font-weight: 750;
+}
 
 .text-button {
   border: 0;
@@ -336,6 +364,16 @@ textarea {
 .skill-tag.missing { background: var(--amber-soft); color: var(--amber); }
 
 .next-step-card { margin-top: 14px; border-left: 4px solid var(--teal); }
+.evidence-card { margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 20px; }
+.privacy-badge { border-radius: 999px; background: var(--teal-soft); color: var(--teal); padding: 6px 9px; font-size: 10px; font-weight: 800; }
+.evidence-list { display: grid; gap: 10px; margin-top: 16px; }
+.evidence-row { border-left: 3px solid var(--line); background: var(--soft); padding: 12px 14px; }
+.evidence-row > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.evidence-row p { margin: 7px 0 0; color: #596473; font-size: 12px; line-height: 1.5; }
+.confidence { border-radius: 999px; padding: 4px 7px; font-size: 9px; font-weight: 850; text-transform: uppercase; }
+.confidence.strong { background: #daf4e9; color: #086247; }
+.confidence.supported { background: #e7effb; color: #285889; }
+.confidence.mentioned { background: var(--amber-soft); color: var(--amber); }
 .next-step-card h3 { font-size: 22px; }
 .next-step-card > p:not(.eyebrow) { color: var(--muted); line-height: 1.55; }
 

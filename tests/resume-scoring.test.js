@@ -2,7 +2,7 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { analyzeResume, detectSkills } = require("../lib/resume-scoring");
+const { analyzeResume, detectSkills, findSkillEvidence } = require("../lib/resume-scoring");
 
 test("detects skills without depending on capitalization", () => {
   assert.deepEqual(detectSkills("aws, TERRAFORM, Docker and python"), [
@@ -32,4 +32,23 @@ test("calculates readiness only from skills required by the selected role", () =
 
 test("rejects unknown role profiles", () => {
   assert.throws(() => analyzeResume("AWS", "unknown-role"), /Unknown role profile/u);
+});
+
+test("returns the exact source sentence and a bounded evidence label", () => {
+  const evidence = findSkillEvidence(
+    "Built Terraform modules that reduced environment setup time by 40%.",
+    "Terraform",
+  );
+
+  assert.deepEqual(evidence, {
+    skill: "Terraform",
+    evidence: "Built Terraform modules that reduced environment setup time by 40%.",
+    confidence: "strong",
+    matched_alias: "terraform",
+  });
+});
+
+test("distinguishes a keyword mention from supported experience", () => {
+  assert.equal(findSkillEvidence("Skills: Docker.", "Docker").confidence, "mentioned");
+  assert.equal(findSkillEvidence("Deployed Docker services to production.", "Docker").confidence, "supported");
 });

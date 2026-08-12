@@ -8,6 +8,9 @@ const targetRole = document.querySelector("#target-role");
 const sampleButton = document.querySelector("#sample-button");
 const characterCount = document.querySelector("#character-count");
 const formError = document.querySelector("#form-error");
+const resumeFile = document.querySelector("#resume-file");
+const fileStatus = document.querySelector("#file-status");
+const clearButton = document.querySelector("#clear-button");
 
 function setCharacterCount() {
   characterCount.textContent = `${resumeText.value.length} characters`;
@@ -21,6 +24,27 @@ function renderTags(containerId, skills, variant) {
       tag.className = `skill-tag ${variant}`;
       tag.textContent = skill;
       return tag;
+    }),
+  );
+}
+
+function renderEvidence(items) {
+  const container = document.querySelector("#skill-evidence");
+  container.replaceChildren(
+    ...items.map((item) => {
+      const row = document.createElement("div");
+      row.className = "evidence-row";
+      const heading = document.createElement("div");
+      const skill = document.createElement("strong");
+      skill.textContent = item.skill;
+      const confidence = document.createElement("span");
+      confidence.className = `confidence ${item.confidence}`;
+      confidence.textContent = item.confidence;
+      heading.append(skill, confidence);
+      const quote = document.createElement("p");
+      quote.textContent = item.evidence;
+      row.append(heading, quote);
+      return row;
     }),
   );
 }
@@ -57,6 +81,7 @@ function renderResult(result) {
   document.querySelector("#missing-count").textContent = result.missing_skills.length;
   renderTags("#matched-skills", result.matched_skills, "matched");
   renderTags("#missing-skills", result.missing_skills, "missing");
+  renderEvidence(result.skill_evidence);
 
   const recommendation = nextStep(result);
   document.querySelector("#next-step-title").textContent = recommendation.title;
@@ -64,6 +89,32 @@ function renderResult(result) {
 }
 
 resumeText.addEventListener("input", setCharacterCount);
+resumeFile.addEventListener("change", async () => {
+  const file = resumeFile.files[0];
+  if (!file) return;
+  fileStatus.textContent = `Reading ${file.name}…`;
+  formError.textContent = "";
+  try {
+    const text = (await window.ResumeFileExtraction.extractResumeFile(file)).trim();
+    if (text.length < 40) throw new Error("Very little text was found. This may be a scanned PDF; paste its text instead.");
+    resumeText.value = text;
+    setCharacterCount();
+    fileStatus.textContent = `${file.name} · ${text.length.toLocaleString()} characters extracted`;
+  } catch (error) {
+    fileStatus.textContent = "File could not be read";
+    formError.textContent = error.message;
+  }
+});
+
+clearButton.addEventListener("click", () => {
+  form.reset();
+  resumeText.value = "";
+  fileStatus.textContent = "Choose a file · processed in your browser";
+  document.querySelector("#results").hidden = true;
+  document.querySelector("#empty-state").hidden = false;
+  formError.textContent = "";
+  setCharacterCount();
+});
 sampleButton.addEventListener("click", () => {
   resumeText.value = sampleResume;
   setCharacterCount();

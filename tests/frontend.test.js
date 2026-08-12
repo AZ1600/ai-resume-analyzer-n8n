@@ -15,15 +15,20 @@ test("frontend exposes accessible analysis controls and result regions", () => {
   assert.match(html, /id="resume-text"/u);
   assert.match(html, /aria-live="polite"/u);
   assert.match(html, /No résumé stored/u);
+  assert.match(html, /id="resume-file"/u);
+  assert.match(html, /id="skill-evidence"/u);
+  assert.match(html, /PDF, DOCX, or TXT/u);
 });
 
 test("frontend loads the shared scoring contract before its controller", () => {
   const html = fs.readFileSync(path.join(frontend, "index.html"), "utf8");
   const scoringIndex = html.indexOf("/resume-scoring.js");
   const appIndex = html.indexOf("/app.js");
+  const extractionIndex = html.indexOf("/file-extraction.js");
 
   assert.ok(scoringIndex >= 0);
   assert.ok(appIndex > scoringIndex);
+  assert.ok(extractionIndex > scoringIndex && appIndex > extractionIndex);
 });
 
 test("frontend container copies assets instead of nesting read-only mounts", () => {
