@@ -27,6 +27,8 @@ docker compose up -d
 
 Open `http://localhost:5678`, import `cloud-resume-analyzer-bedrock.json`, and attach your own AWS credential to the **AWS Bedrock Chat Model** node.
 
+Open `http://localhost:3000` to use the résumé-analysis frontend. The browser runs the same deterministic scoring contract used by the tested module; it does not receive AWS credentials or store résumé text.
+
 The included configuration is for local development only. If n8n is exposed publicly, use HTTPS, secure cookies, a strong n8n encryption key, authentication, and a correctly configured `WEBHOOK_URL`.
 
 ---
@@ -34,7 +36,12 @@ The included configuration is for local development only. If n8n is exposed publ
 ## Architecture
 
 ```text
-Resume Data
+Browser Frontend
+      │
+      ├── Deterministic role scoring
+      │
+      ▼
+Resume Data / n8n Input
       │
       ▼
 n8n Workflow
@@ -222,6 +229,10 @@ The workflow generates:
 ├── cloud-resume-analyzer-bedrock.json
 ├── docker-compose.yml
 ├── .env.example
+├── frontend/
+│   ├── index.html
+│   ├── styles.css
+│   └── app.js
 ├── lib/resume-scoring.js
 ├── tests/resume-scoring.test.js
 ├── package.json

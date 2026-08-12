@@ -1,4 +1,15 @@
 services:
+  frontend:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+
+    ports:
+      - "3000:80"
+
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./lib/resume-scoring.js:/usr/share/nginx/html/resume-scoring.js:ro
+
   n8n:
     image: n8nio/n8n:2.6.4
     restart: unless-stopped
